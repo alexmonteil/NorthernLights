@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
+import agent from "../../app/api/agent";
 import { Product } from "../../app/models/product";
 import ProductList from "./ProductList";
 
@@ -10,8 +10,8 @@ export default function Catalog() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('https://localhost:7092/api/products')
-        .then(response => setProducts(response.data))
+        agent.Catalog.list()
+        .then(products => setProducts(products))
         .catch(error => console.log(error))
         .finally(() => setLoading(false));
     }, []);

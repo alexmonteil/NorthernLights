@@ -7,6 +7,7 @@ import HomePage from "../../features/home/HomePage";
 import ProductDetails from "../../features/catalog/ProductDetails";
 import ContactPage from "../../features/contact/ContactPage";
 import AboutPage from "../../features/about/AboutPage";
+import ErrorTests from "../../features/error-testing/ErrorTests";
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/catalog/:id" element={<ProductDetails />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/tests" element={<ErrorTests />} />
         </Routes>
       </Container>
     </ThemeProvider>
