@@ -456,3 +456,5 @@ $RECYCLE.BIN/
 ## AppSettings.json + Dev DB
 API/appsettings.json
 API/store.db
+API/store.db-shm
+API/store.db-wal
