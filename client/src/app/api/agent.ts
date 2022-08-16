@@ -2,11 +2,18 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../../index";
 
+// Testing Loading component
+const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
+
+// Defines the base url for all axios http requests
 axios.defaults.baseURL = "https://localhost:7092/api/";
 
+// Shorthand function to return axios response data in more concise manner throughout client
 const responseBody = (response: AxiosResponse) => response.data;
 
-axios.interceptors.response.use(response => {
+// Axios interceptor to catch and handle errors with custom components
+axios.interceptors.response.use(async response => {
+    await sleep();
     return response;
 }, (error: AxiosError) => {
     const {data, status} = error.response as any;

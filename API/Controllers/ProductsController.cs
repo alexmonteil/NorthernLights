@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    
     public class ProductsController : BaseApiController
     {
         private readonly StoreContext _context;

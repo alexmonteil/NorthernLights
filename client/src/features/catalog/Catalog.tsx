@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import agent from "../../app/api/agent";
+import NotFound from "../../app/errors/NotFound";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 import { Product } from "../../app/models/product";
 import ProductList from "./ProductList";
 
@@ -18,11 +20,11 @@ export default function Catalog() {
 
 
     if (loading) {
-        return <h3>Loading...</h3>
+        return <LoadingComponent message='Loading products...' />;
     }
 
     if (products.length < 1) {
-        return <h3>No products found</h3>
+        return <NotFound />
     }
 
     return (
