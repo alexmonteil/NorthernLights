@@ -50,7 +50,7 @@ export default function Header({darkMode, toggleDarkMode}: Props) {
         <AppBar position='static' sx={{mb: 4}}>
             <Toolbar sx={toolBarStyles}>
                 <Box sx={boxStyles}>
-                    <Typography variant='h6' component={NavLink} to='/' sx={navStyles}>
+                    <Typography variant='h6' component={NavLink} exact to='/' sx={navStyles}>
                         Northern Lights
                     </Typography>
                     <Switch
