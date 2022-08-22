@@ -94,7 +94,7 @@ public class BasketController : BaseApiController
     private Basket CreateBasket()
     {
         var buyerId = Guid.NewGuid().ToString();
-        var cookieOptions = new CookieOptions{ IsEssential = true, Expires = DateTime.Now.AddDays(30) };
+        var cookieOptions = new CookieOptions{ IsEssential = true, Expires = DateTime.Now.AddDays(30), SameSite = SameSiteMode.Strict };
         Response.Cookies.Append("buyerId", buyerId, cookieOptions);
         var basket = new Basket{ BuyerId = buyerId }; 
         _context.Baskets.Add(basket);
@@ -117,6 +117,7 @@ public class BasketController : BaseApiController
                 Type = item.Product.Type,
                 Brand = item.Product.Brand,
                 Quantity = item.Quantity
+                
             }).ToList()
         };
     }
