@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+        policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:3000");
     });
 });
 
