@@ -4,14 +4,16 @@ import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, 
 import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContex";
 import { BasketItem } from "../../app/models/basket";
+import { useAppDispatch, useAppSelector } from "../../app/store/storeConfig";
 import { currencyFormat } from "../../app/utils/util";
+import { removeItem, setBasket } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
     
-    const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket } = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch();
     const [status, setStatus] = useState({
         loading: false,
         name: ''
@@ -20,7 +22,7 @@ export default function BasketPage() {
     function handleAddItem(productId: number, name: string) {
         setStatus({loading: true, name });
         agent.Basket.addItem(productId)
-        .then(basket => setBasket(basket))
+        .then(basket => dispatch(setBasket(basket)))
         .catch(error => console.log(error))
         .finally(() => setStatus({loading: false, name: ''}));
     }
@@ -28,7 +30,7 @@ export default function BasketPage() {
     function handleRemoveItem(productId: number, name: string, quantity: number = 1) {
         setStatus({ loading: true, name });
         agent.Basket.removeItem(productId, quantity)
-        .then(() => removeItem(productId, quantity))
+        .then(() => dispatch(removeItem({productId, quantity})))
         .catch(error => console.log(error))
         .finally(() => setStatus({loading: false, name: ''}));
     }
