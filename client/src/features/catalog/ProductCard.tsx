@@ -44,7 +44,7 @@ export default function ProductCard({product}: Props) {
             <CardActions>
                 <LoadingButton 
                 loading={status.includes('pendingAddItem' + product.id)} 
-                onClick={() => dispatch(addBasketItemAsync({productId: product.id}))} 
+                onClick={() => dispatch(addBasketItemAsync({productId: product.id, quantity: 1}))} 
                 size="small">Add to cart</LoadingButton>
                 <Button component={Link} to={`/catalog/${product.id}`} size="small">View</Button>
             </CardActions>
