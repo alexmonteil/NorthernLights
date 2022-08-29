@@ -1,11 +1,24 @@
 using API.Controllers;
 using API.Data;
+using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<StoreContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Register Identity class for authentication
+builder.Services.AddIdentityCore<User>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreContext>();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
+// Register DbInitializer as Service
+builder.Services.AddScoped<DbInitializer>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -16,16 +29,17 @@ builder.Services.AddCors(options => {
     });
 });
 
+
+
 var app = builder.Build();
 
 // Seeding Database via DbInitializer static class
 using var scope = app.Services.CreateScope();
-var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
+var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 try 
 {
-    context.Database.Migrate();
-    DbInitializer.Initialize(context);
+    await dbInitializer.MigrateAndSeedDataAsync();
 }
 catch (Exception ex)
 {

@@ -1,13 +1,64 @@
 using API.Entities;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public static class DbInitializer
+    public class DbInitializer
     {
-        public static void Initialize(StoreContext context)
+        private readonly StoreContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public DbInitializer(StoreContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (!context.Products.Any())
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+
+        public async Task MigrateAndSeedDataAsync()
+        {
+            await _context.Database.MigrateAsync();
+            await SeedRolesAsync();
+            await SeedUsersAsync();
+        }
+
+        private async Task SeedRolesAsync()
+        {
+            if (!_roleManager.Roles.Any())
+            {
+                await _roleManager.CreateAsync(new IdentityRole{ Name = "Member", NormalizedName = "MEMBER"});
+                await _roleManager.CreateAsync(new IdentityRole{ Name = "Admin", NormalizedName = "ADMIN"});
+            }
+        }
+        private async Task SeedUsersAsync()
+        {
+            if (!_userManager.Users.Any())
+            {
+                var user = new User 
+                {
+                    UserName = "bob",
+                    Email = "bob@test.com"
+                };
+
+                await _userManager.CreateAsync(user, "Pa$$w0rd!");
+                await _userManager.AddToRoleAsync(user, "Member");
+
+                var admin = new User 
+                {
+                    UserName = "admin",
+                    Email = "admin@test.com"
+                };
+
+                await _userManager.CreateAsync(admin, "AdminPa$$w0rd!");
+                await _userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });
+            }
+        }
+        private async Task SeedProductsAsync()
+        {
+            if (!_context.Products.Any())
             {
                 var products = new HashSet<Product>
                 {
@@ -211,10 +262,10 @@ namespace API.Data
 
                 foreach(var product in products)
                 {
-                    context.Products.Add(product);
+                    await _context.Products.AddAsync(product);
                 }
 
-                context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }
