@@ -1,6 +1,8 @@
 using API.Controllers;
 using API.Data;
 using API.Entities;
+using API.Services;
+using API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,8 @@ builder.Services.AddAuthorization();
 
 // Register DbInitializer as Service
 builder.Services.AddScoped<DbInitializer>();
+// Register TokenService class as Service
+builder.Services.AddScoped<ITokenService, DefaultTokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
