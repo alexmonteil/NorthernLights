@@ -1,6 +1,7 @@
 using API.Dtos;
 using API.Entities;
 using API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +13,10 @@ public class AccountController : BaseApiController
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
 
-    public AccountController(UserManager<User> userManager)
+    public AccountController(UserManager<User> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
+        _tokenService = tokenService;
     }
 
     [HttpPost("login")]
@@ -54,6 +56,19 @@ public class AccountController : BaseApiController
         await _userManager.AddToRoleAsync(user, "Member");
 
         return StatusCode(201);
+    }
+
+    [Authorize]
+    [HttpGet("currentUser")]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        
+        return new UserDto
+        {
+            Email = user.Email,
+            Token = await _tokenService.GenerateToken(user)
+        };
     }
 
 }
