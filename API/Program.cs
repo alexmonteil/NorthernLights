@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<StoreContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Register Identity class for authentication
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentityCore<User>(options => options.User.RequireUniqueEmail = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<StoreContext>();
 
